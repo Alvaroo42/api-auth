@@ -12,23 +12,31 @@ const cors = require('cors');
 
 const port = config.PORT;
 const urlDB = config.DB;
-const accessToken = config.TOKEN;
+const TokenHelper = require('./helpers/token.helper');
 
 const app = express();
 const db = mongojs(urlDB);
 const id = mongojs.ObjectID;
 
 var auth = (req, res, next) => {
-    if (!req.headers.token) {
-        res.status(401).json({ result: 'KO', msg: "Envía un código válido en la cabecera 'token'" });
-        return;
-    };
-    const queToken = req.headers.token;
-    if (queToken === accessToken) {
-        return next();
-    } else {
-        res.status(401).json({ result: 'KO', msg: "No autorizado" });
-    };
+    if (!req.headers.authorization) {
+        return res.status(401).json({ result: 'KO', msg: "Envía un token válido en la cabecera Authorization" });
+    }
+
+    const queToken = req.headers.authorization.split(' ')[1];
+
+    TokenHelper.decodificaToken(queToken).then(
+        userID => {
+            req.user = {
+                token: queToken,
+                id: userID
+            };
+            return next(); 
+        },
+        err => {
+            return res.status(401).json({ result: 'KO', msg: `No autorizado: ${err.msg}` });
+        }
+    );
 };
 
 app.use(logger('dev'));
