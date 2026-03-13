@@ -25,7 +25,7 @@ Agrega notas adicionales sobre cómo hacer deploy.
 ## Construido con 🛠️
 * **Express** - Infraestructura de aplicaciones web Node.js mínima y flexible que proporciona un conjunto sólido de características para las aplicaciones web y móviles.
 * **mongodb** - official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
-* **mongojs** - (official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
+* **mongojs** - official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
 * **cors** - CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 * **morgan** - HTTP request logger middleware for node.js.
 * **nodemon** - Herramienta que ayuda a desarrollar aplicaciones basadas en node.js reiniciando automáticamente la aplicación de node cuando se detectan cambios de archivos en el directorio.
@@ -34,17 +34,17 @@ Agrega notas adicionales sobre cómo hacer deploy.
 * **jwt-simple** - JWT(JSON Web Token) encode and decode module for node.js.
 * **moment** - A JavaScript date library for parsing, validating, manipulating, and formatting dates.
 * **bcrypt** - Algoritmo de hashing de contraseñas poderoso diseñado específicamente para mejorar la seguridad del almacenamiento de contraseñas en un sistema.
-* **jwt-simple** - Mecanismo para verificar el propietario de algunos datos JSON. Es una cadena codificada y segura para URL que puede contener una cantidad ilimitada de datos y está firmada criptográficamente.
 
 ## Versionado 📌
 Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](#).
 
-En este repositorio se pueden encontrar la evolución del proyecto desde la estructura básica de un servicio, hasta un servicio CRUD completo con comunicación HTTPS, soporte para CORS, seguridad con Helmet y autorización tipo bearer basada en tokens tipo JWT:
+En este repositorio se pueden encontrar la evolución del proyecto desde la estructura básica de un servicio, hasta un servicio con comunicación HTTPS, soporte para CORS, seguridad y autorización tipo bearer basada en tokens tipo JWT:
 
-| tag | Descripción |
+| tag / commit | Descripción |
 | :--- | :--- |
-| v1.0.0 | WS de Registro (API base protegida con token básico). |
-| v1.1.0 | WS Auth completo (API protegida con autenticación Bearer JWT y rutas de auth). |
+| v1.0.0 | WS de Registro (API base de usuarios con validación inicial). |
+| commit | WS de Registro con autorización Bearer JWT. |
+| v1.1.0 | WS Auth completo (API protegida con JWT y rutas `/api/auth` finales). |
 
 ## Autores ✒️
 
@@ -53,6 +53,10 @@ En este repositorio se pueden encontrar la evolución del proyecto desde la estr
 * **Paco Maciá** - *Trabajo Inicial* - [pmacia](#)
 * **Álvaro Márquez Sirvent** - *Documentación y desarrollo* - [ams](#)
 
+
+## Licencia 📄
+
+Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](#) para detalles
 
 ## Expresiones de Gratitud 🎁
 

@@ -18,6 +18,9 @@ const app = express();
 const db = mongojs(urlDB);
 const id = mongojs.ObjectID;
 
+const PassHelper = require('./helpers/pass.helper');
+const moment = require('moment');
+
 var auth = (req, res, next) => {
     if (!req.headers.authorization) {
         return res.status(401).json({ result: 'KO', msg: "Envía un token válido en la cabecera Authorization" });
@@ -60,11 +63,92 @@ app.get('/api/user/:id', auth, (req, res, next) => {
     });
 });
 
+app.get('/api/auth', auth, (req, res, next) => {
+    db.collection('user').find({}, { displayName: 1, email: 1, _id: 0 }, (err, usuarios) => {
+        if (err) return res.status(500).json({ result: 'KO', msg: err });
+        res.json({ result: 'OK', usuarios: usuarios });
+    });
+});
+
+app.get('/api/auth/me', auth, (req, res, next) => {
+    // req.user.id viene de nuestro middleware auth
+    db.collection('user').findOne({ _id: id(req.user.id) }, (err, usuario) => {
+        if (err) return res.status(500).json({ result: 'KO', msg: err });
+        if (!usuario) return res.status(404).json({ result: 'KO', msg: 'Usuario no encontrado' });
+        
+        res.json({ result: 'OK', usuario: usuario });
+    });
+});
+
 app.post('/api/user', (req, res, next) => {
     const nuevoElemento = req.body;
     db.collection('user').save(nuevoElemento, (err, coleccionGuardada) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });;
         res.json(coleccionGuardada);
+    });
+});
+
+app.post('/api/auth/reg', (req, res, next) => {
+    const { name, email, pass } = req.body;
+
+    if (!name || !email || !pass) {
+        return res.status(400).json({ result: 'KO', msg: 'Faltan campos obligatorios' });
+    }
+
+    db.collection('user').findOne({ email: email }, (err, existingUser) => {
+        if (err) return res.status(500).json({ result: 'KO', msg: err });
+        if (existingUser) return res.status(400).json({ result: 'KO', msg: 'El email ya está registrado' });
+
+        PassHelper.encriptaPassword(pass).then(hashedPassword => {
+            const newUser = {
+                displayName: name,
+                email: email,
+                password: hashedPassword,
+                signupDate: moment().unix(),
+                lastLogin: moment().unix()
+            };
+
+            db.collection('user').save(newUser, (err, savedUser) => {
+                if (err) return res.status(500).json({ result: 'KO', msg: err });
+
+                const token = TokenHelper.creaToken(savedUser);
+                res.json({ result: 'OK', token: token, usuario: savedUser });
+            });
+        });
+    });
+});
+
+app.post('/api/auth/login', (req, res, next) => {
+    const { email, pass } = req.body;
+
+    if (!email || !pass) {
+        return res.status(400).json({ result: 'KO', msg: 'Debe suministrar un correo y una contraseña' });
+    }
+
+    db.collection('user').findOne({ email: email }, (err, user) => {
+        if (err) return res.status(500).json({ result: 'KO', msg: err });
+        if (!user) return res.status(400).json({ result: 'KO', msg: 'El usuario no está registrado o la contraseña no es correcta' });
+
+        // Comparamos contraseñas
+        PassHelper.comparaPassword(pass, user.password).then(isMatch => {
+            if (!isMatch) return res.status(400).json({ result: 'KO', msg: 'El usuario no está registrado o la contraseña no es correcta' });
+
+            const token = TokenHelper.creaToken(user);
+            const horaActual = moment().unix();
+
+            // Actualizamos la fecha del último login
+            db.collection('user').update(
+                { _id: id(user._id) },
+                { $set: { lastLogin: horaActual } },
+                { safe: true, multi: false },
+                (err, result) => {
+                    if (err) return res.status(500).json({ result: 'KO', msg: err });
+                    
+                    user.lastLogin = horaActual;
+                    res.json({ result: 'OK', token: token, usuario: user });
+                }
+            );
+        });
     });
 });
 

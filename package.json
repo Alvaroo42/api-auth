@@ -1,6 +1,6 @@
 {
   "name": "api-auth",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "_Este proyecto consiste en el desarrollo de un Backend completo utilizando el stack tecnológico MEAN (MongoDB, Express, Angular, Node.js). El objetivo principal es crear una API RESTful que permita realizar operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre una base de datos MongoDB._",
   "homepage": "https://github.com/Alvaroo42/api-auth#readme",
   "bugs": {
