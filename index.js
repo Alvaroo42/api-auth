@@ -9,6 +9,7 @@ const helmet = require('helmet');
 const logger = require('morgan');
 const mongojs = require('mongojs');
 const cors = require('cors');
+const AuthMiddleware = require('./middlewares/auth.middleware');
 
 const port = config.PORT;
 const urlDB = config.DB;
@@ -21,41 +22,20 @@ const id = mongojs.ObjectID;
 const PassHelper = require('./helpers/pass.helper');
 const moment = require('moment');
 
-var auth = (req, res, next) => {
-    if (!req.headers.authorization) {
-        return res.status(401).json({ result: 'KO', msg: "Envía un token válido en la cabecera Authorization" });
-    }
-
-    const queToken = req.headers.authorization.split(' ')[1];
-
-    TokenHelper.decodificaToken(queToken).then(
-        userID => {
-            req.user = {
-                token: queToken,
-                id: userID
-            };
-            return next(); 
-        },
-        err => {
-            return res.status(401).json({ result: 'KO', msg: `No autorizado: ${err.msg}` });
-        }
-    );
-};
-
 app.use(logger('dev'));
 app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/user', auth, (req, res, next) => {
+app.get('/api/user', AuthMiddleware.auth, (req, res, next) => {
     db.collection('user').find((err, coleccion) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });;
         res.json(coleccion);
     });
 });
 
-app.get('/api/user/:id', auth, (req, res, next) => {
+app.get('/api/user/:id', AuthMiddleware.auth, (req, res, next) => {
     const elementoId = req.params.id;
     db.collection('user').findOne({ _id: id(elementoId) }, (err, elementoRecuperado) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });;
@@ -63,14 +43,14 @@ app.get('/api/user/:id', auth, (req, res, next) => {
     });
 });
 
-app.get('/api/auth', auth, (req, res, next) => {
+app.get('/api/auth', AuthMiddleware.auth, (req, res, next) => {
     db.collection('user').find({}, { displayName: 1, email: 1, _id: 0 }, (err, usuarios) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });
         res.json({ result: 'OK', usuarios: usuarios });
     });
 });
 
-app.get('/api/auth/me', auth, (req, res, next) => {
+app.get('/api/auth/me', AuthMiddleware.auth, (req, res, next) => {
     // req.user.id viene de nuestro middleware auth
     db.collection('user').findOne({ _id: id(req.user.id) }, (err, usuario) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });
@@ -152,7 +132,7 @@ app.post('/api/auth/login', (req, res, next) => {
     });
 });
 
-app.put('/api/user/:id', auth, (req, res, next) => {
+app.put('/api/user/:id', AuthMiddleware.auth, (req, res, next) => {
     const elementoId = req.params.id;
     const nuevosRegistros = req.body;
     db.collection('user').update({ _id: id(elementoId) },
@@ -164,7 +144,7 @@ app.put('/api/user/:id', auth, (req, res, next) => {
         });
 });
 
-app.delete('/api/user/:id', auth, (req, res, next) => {
+app.delete('/api/user/:id', AuthMiddleware.auth, (req, res, next) => {
     const elementoId = req.params.id;
     db.collection('user').remove({ _id: id(elementoId) }, (err, resultado) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });;
