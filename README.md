@@ -1,143 +1,58 @@
-# API-CRUD
+# API-CRUD + TALLER_CRYPT + API-AUTH
 
-_Este proyecto consiste en el desarrollo de un Backend completo utilizando el stack tecnológico MEAN (MongoDB, Express, Angular, Node.js). El objetivo principal es crear una API RESTful que permita realizar operaciones CRUD (Crear, Leer, Actualizar, Borrar) sobre una base de datos MongoDB._
+*Descripción (en cursiva) del proyecto, aplicación o sistema. Todo lo que hay en este documento se debe tomar como plantilla de ejemplo, por lo que no se debe dudar en añadir, quitar o modificar lo que se estime oportuno.*
 
-_En el caso de ser un API, se muestra a continuación un ejemplo de tabla con las posibles rutas (**endpoints**) del API (el tema de los colores es bastante novedoso y en mucho visores serán ignorados):_
+En el caso de ser un API, se muestra a continuación un ejemplo de tabla con las posibles rutas (**endpoints**) del API (el tema de los colores es bastante novedoso y en mucho visores serán ignorados):
 
-Verbo HTTP | Ruta | Descripción
---------: | :------- | :--------
-<span style="color:green">GET</span> | /api | Obtenemos todas las colecciones existentes en la DB.
-<span style="color:green">GET</span> | /api/\{coleccion\} | Obtenemos todos los elementos de la tabla \{coleccion\}.
-<span style="color:green">GET</span> | /api/\{coleccion\}/\{id\} | Obtenemos el elemento indicado en \{id\} de la tabla \{coleccion\}.
-<span style="color:yellow">POST</span> | /api/\{coleccion\} | Creamos un nuevo elemento en la tabla \{coleccion\}.
-<span style="color:blue">PUT</span> | /api/\{coleccion\}/\{id\} | Modificamos el elemento \{id\} de la tabla \{coleccion\}.
-<span style="color:red">DELETE</span> | /api/\{coleccion\}/\{id\} | Eliminamos el elemento \{id\} de la tabla \{coleccion\}.
+| Verbo HTTP | Ruta | Descripción |
+| :--- | :--- | :--- |
+| GET | `/api/user` | Obtenemos todos los usuarios registrados en el sistema. |
+| GET | `/api/user/{id}` | Obtenemos el usuario indicado por el `{id}`. |
+| POST | `/api/user` | Registramos un nuevo usuario con toda su información. |
+| PUT | `/api/user/{id}` | Modificamos el usuario `{id}`. |
+| DELETE | `/api/user/{id}` | Eliminamos el usuario `{id}`. |
 
-## Comenzando 🚀
-
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
-Ver **Deployment** para conocer cómo desplegar el proyecto.
-
-### Pre-requisitos 📋
-
-_Se debe tener instalado **Node JS** en el equipo de desarrollo. Las siguientes líneas muestran cómo hacerlo con líneas de comando (por eso escribiremos sh tras las tre comiilas invertidas) para **Ubuntu 22.04**:_
-
-```sh
-sudo apt update
-sudo apt install npm
-sudo npm clean -f
-sudo npm i -g n
-sudo n stable
-```
-
-_Igualmente se debe tener instalada la DB **MongoDB** y asegurarnos que está lanzada..._
-
-```sh
-sudo apt update
-sudo apt install -y mongodb
-sudo systemctl start mongodb
-```
-
-### Instalación 🔧
-
-_En esta sección veremos cómo instalar y configurar el entorno de desarrollo para trabajar con el proyecto._
-
-_En primer lugar, debemos clonar el proyecto desde nuestro repositorio._
-
-```sh
-git clone https://pmacia@bitbucket.org/pmacia/api-rest.git
-```
-
-_Una vez clonado el respositorio, debemos instalar y actualizar todas las bibliotecas de código y dependencias del proyecto._
-
-```sh
-cd api-rest
-npm i
-```
-
-_Para poner el proyecto en marcha, ejecutaremos el siguiente comando:_
-
-```sh
-npm start
-```
-
-## Pruebas con Postman 📯
-
-_El archivo `CRUD_postman_collection.json` contiene una colección de pruebas para todos los **endpoints** del API del servicio._
-
-_Para poder emplearlo desde **Postman**, bastará con importar el archivo y, si fuera necesario, modificar el puerto de escucha del servidor._
-
-<!-- ## Ejecutando las pruebas ⚙️
-
-_Explica cómo ejecutar las pruebas automatizadas para este sistema._
-
-### Analice las pruebas end-to-end 🔩
-
-_Explica qué verifican estas pruebas y por qué_
-
-```
-Proporciona un ejemplo
-```
-
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica qué verifican estas pruebas y por qué_
-
-```
-Proporciona un ejemplo
-``` -->
+| Verbo HTTP | Ruta | Descripción |
+| :--- | :--- | :--- |
+| GET | `/api/auth` | Obtenemos todos los usuarios registrados en el sistema (es una versión reducida de GET /api/user en la que solo mostramos nombre y correo). |
+| GET | `/api/auth/me` | Verifica el token jwt. Obtenemos el usuario a partir de un token jwt válido. |
+| POST | `/api/auth/login` | Realiza una identificación o login (signIn). Si todo es correcto, genera y devuelve un token jwt válido. |
+| POST | `/api/auth/reg` | Realiza un registro mínimo (signUp) de un usuario. Si todo va bien, genera y devuelve un token jwt válido. |
 
 ## Despliegue 📦
-
-_Agrega notas adicionales sobre cómo hacer deploy._
+Agrega notas adicionales sobre cómo hacer deploy.
 
 ## Construido con 🛠️
-
-* [Express](https://expressjs.com/es/) - Infraestructura de aplicaciones web Node.js mÃ­nima y flexible que proporciona un conjunto sólido de caracterí­sticas para las aplicaciones web y móviles.
-* [mongodb](https://www.mongodb.com/docs/drivers/node/current/) - official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
-* [mongojs](github.com/mongo-js/mongojs#readme) - Iofficial MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
-* [cors](github.com/expressjs/cors#readme) - CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
-* [helmet](helmetjs.github.io/) - IHelmet helps you secure your Express apps by setting various HTTP headers. It's not a silver bullet, but it can help!
-* [morgan](github.com/expressjs/morgan#readme) - HTTP request logger middleware for node.js.
-* [nodemon](https://www.npmjs.com/package/nodemon) - Herramienta que ayuda a desarrollar aplicaciones basadas en node.js reiniciando automáticamente la aplicación de node cuando se detectan cambios de archivos en el directorio.
-* [jwt-simple](https://github.com/hokaccha/node-jwt-simple#readme) - JWT(JSON Web Token) encode and decode module for node.js.
-* [moment](https://momentjs.com) - A JavaScript date library for parsing, validating, manipulating, and formatting dates.
-
-<!-- ## Contribuyendo 🖇️
-
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/tu/tuProyecto) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
-
-## Wiki 📖
-
-Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki) -->
+* **Express** - Infraestructura de aplicaciones web Node.js mínima y flexible que proporciona un conjunto sólido de características para las aplicaciones web y móviles.
+* **mongodb** - official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
+* **mongojs** - (official MongoDB Node.js driver. You can add the driver to your application to work with MongoDB in JavaScript.
+* **cors** - CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+* **morgan** - HTTP request logger middleware for node.js.
+* **nodemon** - Herramienta que ayuda a desarrollar aplicaciones basadas en node.js reiniciando automáticamente la aplicación de node cuando se detectan cambios de archivos en el directorio.
+* **https** - Módulo nativo de Node.js que permite crear servidores HTTPS seguros utilizando certificados SSL/TLS. Se usa para cifrar la comunicación entre el servidor y los clientes, protegiendo los datos en tránsito.
+* **helmet** - Middleware de seguridad para Express que ayuda a proteger las aplicaciones web configurando de manera automática varios encabezados HTTP de seguridad.
+* **jwt-simple** - JWT(JSON Web Token) encode and decode module for node.js.
+* **moment** - A JavaScript date library for parsing, validating, manipulating, and formatting dates.
+* **bcrypt** - Algoritmo de hashing de contraseñas poderoso diseñado específicamente para mejorar la seguridad del almacenamiento de contraseñas en un sistema.
+* **jwt-simple** - Mecanismo para verificar el propietario de algunos datos JSON. Es una cadena codificada y segura para URL que puede contener una cantidad ilimitada de datos y está firmada criptográficamente.
 
 ## Versionado 📌
+Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](#).
 
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://https://bitbucket.org/pmacia/api-rest/commits/).
+En este repositorio se pueden encontrar la evolución del proyecto desde la estructura básica de un servicio, hasta un servicio CRUD completo con comunicación HTTPS, soporte para CORS, seguridad con Helmet y autorización tipo bearer basada en tokens tipo JWT:
 
-En este respositorio se pueden encontrar la evolución del proyecto desde la estructura básica de un servicio, hasta un servicio CRUD completo con comunicación HTTPS, soporte para CORS, seguridad con Helmet y autorización tipo bearer basada en tokens tipo JWT:
-
-tag     | Descripción
-------- | ------------------------------------------
-v1.0.25 | API Rest Hola Mundo.
-v2.0.0  | API Rest CRUD (sin DB).
-v3.0.0  | API Rest CRUD (con DB MongoDB).
-v3.1.0  | API Rest CRUD con seguridad.
-v3.2.0  | API Rest CRUD con seguridad y auth basado en Bearer JWT.
+| tag | Descripción |
+| :--- | :--- |
+| v1.0.0 | WS de Registro (API base protegida con token básico). |
+| v1.1.0 | WS Auth completo (API protegida con autenticación Bearer JWT y rutas de auth). |
 
 ## Autores ✒️
 
-_Todos aquellos que ayudaron a levantar el proyecto desde sus inicios:_
+*Todos aquellos que ayudaron a levantar el proyecto desde sus inicios:*
 
-* **Paco Maciá** - _Trabajo Inicial_ - [pmacia](https://github.com/pmacia)
-* **Álvaro Márquez Sirvent** - _Documentación y desarrollo_ - [ams](#fulanito-de-tal)
+* **Paco Maciá** - *Trabajo Inicial* - [pmacia](#)
+* **Álvaro Márquez Sirvent** - *Documentación y desarrollo* - [ams](#)
 
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quiénes han participado en este proyecto.
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
 
 ## Expresiones de Gratitud 🎁
 

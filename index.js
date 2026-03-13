@@ -18,19 +18,6 @@ const app = express();
 const db = mongojs(urlDB);
 const id = mongojs.ObjectID;
 
-var allowCrossTokenOrigin = (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    return next();
-};
-var allowCrossTokenMethods = (req, res, next) => {
-    res.header("Access-Control-Allow-Methods", "*");
-    return next();
-};
-var allowCrossTokenHeaders = (req, res, next) => {
-    res.header("Access-Control-Allow-Headers", "*");
-    return next();
-};
-
 var auth = (req, res, next) => {
     if (!req.headers.token) {
         res.status(401).json({ result: 'KO', msg: "Envía un código válido en la cabecera 'token'" });
@@ -49,14 +36,6 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
-app.use(allowCrossTokenOrigin);
-app.use(allowCrossTokenMethods);
-app.use(allowCrossTokenHeaders);
-
-app.get('/', auth, (req, res) => {
-    res.send('Hola estás en la página inicial');
-    console.log('Se recibió una petición get a través de https');
-});
 
 app.get('/api/user', auth, (req, res, next) => {
     db.collection('user').find((err, coleccion) => {
@@ -73,7 +52,7 @@ app.get('/api/user/:id', auth, (req, res, next) => {
     });
 });
 
-app.post('/api/user', auth, (req, res, next) => {
+app.post('/api/user', (req, res, next) => {
     const nuevoElemento = req.body;
     db.collection('user').save(nuevoElemento, (err, coleccionGuardada) => {
         if (err) return res.status(500).json({ result: 'KO', msg: err });;
